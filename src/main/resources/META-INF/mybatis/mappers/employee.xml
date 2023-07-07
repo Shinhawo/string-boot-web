@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.jhta.mapper.EmployeeDao">
+	<select id="getEmployeesByJobId" parameterType="string" resultType="kr.co.jhta.vo.Employee">
+		select 
+			A.employee_id 			as id,
+			A.first_name			as firstName,
+			A.last_name				as lastName,
+			A.hire_date				as hireDate,
+			A.salary				as salary,
+			A.job_id				as "job.id",
+			B.department_name		as "department.name"			
+		from
+			employees A, departments B	
+		where 
+			  A.department_id = B.department_id(+)
+			  and A.job_id = #{value}
+		order by
+			A.employee_id asc
+	</select>
+	
+	<select id="getEmployeesByDeptId" parameterType="int" resultType="kr.co.jhta.vo.Employee">
+		select 
+			A.employee_id 			as id,
+			A.first_name			as firstName,
+			A.last_name				as lastName,
+			A.hire_date				as hireDate,
+			A.salary				as salary,
+			B.department_name		as "department.name"			
+		from
+			employees A, departments B	
+		where 
+			  A.department_id = B.department_id(+)
+			  and A.department_id = #{value}
+		order by
+			A.employee_id asc
+	</select>
+	<insert id="insertEmployee" parameterType="kr.co.jhta.vo.Employee">
+		insert into employees
+		(employee_id, first_name, last_name, email, phone_number, hire_date, job_id,
+		 salary, commission_pct, manager_id, department_id)
+		values
+		(employees_seq.nextval, #{firstName}, #{lastName}, #{email}, #{phoneNumber}, #{hireDate},
+		 #{job.id}, #{salary}, #{commissionPct}, #{manager.id}, #{department.id})
+	</insert>
+	
+	
+</mapper>

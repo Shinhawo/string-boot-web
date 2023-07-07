@@ -1,0 +1,44 @@
+# 내장 웹 서버의 포트번호 지정
+server:
+  port: 80
+
+# 로그레벨 지정하기
+logging:
+# 애플리케이션의 기본 로그레벨을 info로 지정함
+  level:
+# org.springframework.web 패키지에 대해서는 로그레벨을 trace로 지정함
+    root: info
+#    '[org.springframework.web]' : trace
+# mybatis 실행시 SQL 및 SQL 실행결과가 로그로 출력됨
+    '[kr.co.jhta.mapper]' : trace
+
+# prefix 주소의 앞부분
+# suffix 주소의 마지막 부분
+# 이제 이름만 적으면 됨
+spring:
+# 커넥션 풀 설정
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: hr
+    password: zxcv1234
+  mvc:
+    view:
+# spring web mvc의 뷰 템플릿 경로 설정
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+      
+# mybatis 설정
+mybatis:
+# mapper XML 파일이 위치한 경로 지정
+# 배열이다 -> 여러개 가능하다. yml에선 -를 앞에 붙여서 표현한다.
+  mapper-locations:
+  - META-INF/mybatis/mappers/*.xml
+# resultType, parameterType으로 자주 사용되는 클래스에 대한 별칭정보를 획득할 수 있는 패키지 지정
+  type-aliases-package: kr.co.jhta.vo
+  configuration:
+# NULL값이 허용되는 컬럼에 NULL값을 추가할 수 있도록 
+# 안하면 NULL값이 허용되는 컬럼에 NULL값을 추가하려고 하면 오류가 난다.
+    jdbc-type-for-null: 'NULL'
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
+    
