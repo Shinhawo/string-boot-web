@@ -25,10 +25,11 @@
 			A.first_name			as firstName,
 			A.last_name				as lastName,
 			A.hire_date				as hireDate,
+			A.job_id				as "job.id",		
 			A.salary				as salary,
-			B.department_name		as "department.name"			
+			B.department_name		as "department.name"	
 		from
-			employees A, departments B	
+			employees A, departments B
 		where 
 			  A.department_id = B.department_id(+)
 			  and A.department_id = #{value}
@@ -44,5 +45,110 @@
 		 #{job.id}, #{salary}, #{commissionPct}, #{manager.id}, #{department.id})
 	</insert>
 	
+	<select id="getTotalRows" parameterType="map" resultType="int">
+		select count(*)
+		from employees
+		<where>
+			<choose >
+				<when test="opt == 'name'">
+					(first_name = INITCAP(#{keyword}) or last_name = INITCAP(#{keyword}))
+				</when>
+				<when test="opt == 'job'">
+					job_id = UPPER(#{keyword})
+				</when>
+				<when test="opt == 'phone'">
+					phone_number = #{phone}
+				</when>
+				<when test="opt == 'dept'">
+					department_id in (select department_id
+									  from departments
+									  where department_name = INITCAP(#{keyword}))
+				</when>
+			</choose>
+		</where>
+	</select>
+	
+	
+	<select id="getEmployees" parameterType="map" resultType="kr.co.jhta.vo.Employee">
+		select *
+		
+		from(
+			select
+				A.employee_id 			as id,
+				A.first_name			as firstName,
+				A.last_name				as lastName,
+				A.phone_number 			as phoneNumber,
+				A.hire_date				as hireDate,
+				A.job_id				as "job.id",
+				A.department_id			as "department.id",
+				B.department_name		as "department.name",
+				<choose>
+					<when test="sort == 'id'">
+						row_number() over (order by A.employee_id asc) rownumber
+					</when>
+					<when test="sort == 'name'">
+						row_number() over (order by A.first_name asc) rownumber
+					</when>
+					<when test="sort == 'date'">
+						row_number() over (order by A.hire_date asc) rownumber
+					</when>
+					<when test="sort == 'job'">
+						row_number() over (order by A.job_id asc) rownumber
+					</when>
+					<when test="sort == 'dept'">
+						row_number() over (order by B.department_name asc) rownumber
+					</when>
+				</choose>
+			from employees A, departments B
+			where A.department_id = B.department_id
+			<choose >
+				<when test="opt == 'name'">
+					and (A.first_name = INITCAP(#{keyword}) or A.last_name = INITCAP(#{keyword}))
+				</when>
+				<when test="opt == 'job'">
+					and A.job_id like '%' || UPPER(#{keyword}) || '%'
+				</when>
+				<when test="opt == 'phone'">
+					and A.phone_number = #{phone}
+				</when>
+				<when test="opt == 'dept'">
+					and A.department_id in (select department_id
+									  	from departments
+									  	where department_name = INITCAP(#{keyword}))
+				</when>
+			</choose>
+		)
+		where
+			rownumber between #{begin} and #{end}
+		
+	</select>
+	
+	<select id="getEmployeeById" parameterType="int" resultType="kr.co.jhta.vo.Employee">
+		select 
+			A.employee_id 			as id,
+			A.first_name			as firstName,
+			A.last_name				as lastName,
+			A.email,
+			A.phone_number			as phoneNumber,
+			A.hire_date				as hireDate,
+			A.salary,
+			A.job_id				as "job.id",
+			B.job_title				as "job.title",
+			A.commission_pct		as commissionPct,
+			A.manager_id			as "manager.id",
+			C.first_name			as "manager.firstName",
+			C.last_name			    as "manager.lastName",
+			A.department_id			as "department.id",
+			D.department_name		as "department.name"			
+		from
+			employees A, jobs B, employees C, departments D
+		where 
+			  A.department_id = D.department_id(+)
+			  and A.job_id = B.job_id
+			  and A.manager_id = C.employee_id(+)
+			  and A.employee_id = #{value}
+		order by
+			A.employee_id asc
+	</select>
 	
 </mapper>

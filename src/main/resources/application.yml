@@ -42,3 +42,9 @@ mybatis:
     jdbc-type-for-null: 'NULL'
     log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
     
+# 직원정보 일괄등록 엑셀파일 저장경로
+hr:
+  employee:
+    xls:
+      save-directory: C:\\eGovFrameDev-4.1.0-64bit\files
+    

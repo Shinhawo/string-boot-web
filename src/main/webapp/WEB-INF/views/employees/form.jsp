@@ -92,6 +92,32 @@
          </div>
       </div>
    </div>
+   <div class="row mb-3">
+   		<div class="col-12">
+   			<div class="card">
+   				<div class="card-header">직원 일괄등록</div>
+   				<div class="card-body">
+   					<form method="post" action="upload" enctype="multipart/form-data">
+	   					<div class="row mb-3">
+	   						<label class="col-sm-1 col-form-label text-end">제목</label>
+	   						<div class="col-9">
+	   							<input type="text" class="form-control" name="title">
+	   						</div>
+	   					</div>
+	   					<div class="row mb-3">
+	                     <label class="col-sm-1 col-form-label text-end">첨부파일</label>
+	                     <div class="col-9">
+	                        <input type="file" accept=".xls,.xlsx" class="form-control" name="xlsfile" />
+	                     </div>
+	                     <div class="col-2 text-end">
+	                       	<button type="submit" class="btn btn-primary btn-sm" >일괄등록</button>
+	                     </div>
+	                  </div>
+   					</form>
+   				</div>
+   			</div>
+   		</div>
+   </div>
 </div>
 <script type="text/javascript">
 /*

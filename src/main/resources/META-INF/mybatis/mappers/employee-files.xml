@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.jhta.mapper.EmployeeFileDao">
+
+	<insert id="insertEmployeeFile" parameterType="kr.co.jhta.vo.EmployeeFile">
+		insert into employee_files
+		(file_id, file_title, file_name)
+		values
+		(employee_files_seq.nextval, #{title}, #{name})
+	</insert>
+	
+	<select id="getEmployeeFiles" resultType="kr.co.jhta.vo.EmployeeFile">
+		select
+			file_id				as id,
+			file_title			as title,
+			file_name			as name,
+			file_added			as added,
+			file_create_date	as createDate
+		from
+			employee_files
+		order by 
+			file_id desc
+	</select>
+	
+	<select id="getEmployeeFileById" parameterType="int" resultType="kr.co.jhta.vo.EmployeeFile">
+		select
+			file_id				as id,
+			file_title			as title,
+			file_name			as name,
+			file_added			as added,
+			file_create_date	as createDate
+		from
+			employee_files
+		where
+			file_id = #{value}
+	</select>
+	
+	<update id="updateEmployeeFile" parameterType="kr.co.jhta.vo.EmployeeFile">
+		update
+			employee_files
+		set
+			file_title = #{title},
+			file_name = #{name},
+			file_added = #{added}
+		where
+			file_id = #{id}
+	</update>
+</mapper>
