@@ -18,6 +18,10 @@
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
+	
+		<!-- 
+			spring web MVC 개발을 지원하는 의존성
+		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -98,6 +102,26 @@
 			<version>2.3.1</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- 
+			spriing security 의존성
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- 
+			spring security 태그 라이브러리 의존성
+		-->
+		<dependency>
+         <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-taglibs</artifactId>
+      	</dependency>		
 	</dependencies>
 
 

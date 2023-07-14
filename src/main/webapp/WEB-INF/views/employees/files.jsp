@@ -39,7 +39,7 @@
  									<td>${file.name }</td>
  									<td>${file.added eq 'N' ? '미등록' : '등록완료' }</td>
  									<td>
- 										<a href="add-all?id=${file.id }" class="btn btn-primary btn-sm">일괄등록</a>
+ 										<a href="add-all?id=${file.id }" class="btn btn-primary btn-sm ${file.added eq 'Y' ? 'disabled' : '' }">일괄등록</a>
  										<a href="download?id=${file.id }" class="btn btn-outline-primary btn-sm">다운로드</a>
  									</td>
  								</tr>

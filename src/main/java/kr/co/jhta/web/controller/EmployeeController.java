@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import kr.co.jhta.service.HrService;
 import kr.co.jhta.vo.Department;
@@ -23,6 +25,9 @@ import kr.co.jhta.vo.Job;
 import kr.co.jhta.web.form.AddEmployeeFileForm;
 import kr.co.jhta.web.form.AddEmployeeForm;
 import kr.co.jhta.web.model.EmployeeList;
+import kr.co.jhta.web.view.EmployeesExcelView;
+import kr.co.jhta.web.view.FileDownloadView;
+import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -30,8 +35,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EmployeeController {
 
+	@Value("${hr.employee.xls.save-directory}")
+	private String directory;
+	
+	@Autowired
+	private FileDownloadView fileDownloadView;
+	
+	@Autowired
+	private EmployeesExcelView employeesExcelView;
+	
 	@Autowired
 	private HrService hrService;
+	
+	// 로그인 화면 요청을 처리하는 요청핸들러 메서드
+	@GetMapping("/loginform")
+	public String form() {
+		return "employees/loginform";
+	}
 	
 	// 직원목록화면 요청과 매핑되는 요청핸들러 메서드
 	@GetMapping("/list")
@@ -85,8 +105,9 @@ public class EmployeeController {
 	// 신규직원 등록 요청과 매핑되는 요청핸들러 메서드
 	@PostMapping("/add")
 	public String createEmployee(AddEmployeeForm form) {
+//		throw new RuntimeException("파이널 프로젝트 잘하장!!");
 		hrService.createEmployee(form);
-		return "redirect:list";
+		return "redirect:/";
 	}
 	
 	// 직원상세정보 화면 요청과 매핑되는 요청핸들러 메서드
@@ -130,5 +151,43 @@ public class EmployeeController {
 		hrService.addEmployees(fileId);
 		
 		return "redirect:files";
+	}
+	
+	// 엑셀파일 다운로드 요청
+	// 요청방식 : Get
+	// 요청 URL : http://localhost/emp/download?id=10001
+	@GetMapping("/download")
+	public ModelAndView fileDownload(@RequestParam("id") int fileId) throws Exception{
+		
+		EmployeeFile employeeFile = hrService.getEmployeeFile(fileId);
+		
+		// ModelAndView 객체에 파일다운로드 응답을 보내는 View 객체를 저장한다.
+		//					 디렉토리 경로를 저장한다.
+		//                   파일명을 저장한다.
+		
+		ModelAndView mav = new ModelAndView();
+		
+		// 파일을 응답으로 보내는 FieDownloadView 객체를 ModelAndView객체에 저장함.
+		mav.setView(fileDownloadView);
+		// FileDownloadView 객체에 전달할 정보를 ModelAndView객체에 저장함.
+		// 요것들은 FiledownloadView, renderMergedOutputModel 메서드의 model에 전달됨
+		mav.addObject("directory", directory);
+		mav.addObject("filename", employeeFile.getName());
+		
+		return mav;
+	}
+	
+	// 전체 직원 목록에 대한 엑셀파일 요청
+	// 요청방식 : GET
+	// 요청URL : http://localhost/emp/xls
+	@GetMapping("/xls")
+	public ModelAndView downloadEmployeesXls() {
+		List<Employee> employees = hrService.getAllEmployees();
+		
+		ModelAndView mav = new ModelAndView();
+		mav.setView(employeesExcelView);
+		mav.addObject("items", employees);
+		
+		return mav;
 	}
 }

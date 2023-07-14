@@ -7,6 +7,7 @@
 			A.first_name			as firstName,
 			A.last_name				as lastName,
 			A.hire_date				as hireDate,
+			A.encrypted_password    as encryptedPassword,
 			A.salary				as salary,
 			A.job_id				as "job.id",
 			B.department_name		as "department.name"			
@@ -36,12 +37,13 @@
 		order by
 			A.employee_id asc
 	</select>
+	
 	<insert id="insertEmployee" parameterType="kr.co.jhta.vo.Employee">
 		insert into employees
-		(employee_id, first_name, last_name, email, phone_number, hire_date, job_id,
+		(employee_id, encrypted_password, first_name, last_name, email, phone_number, hire_date, job_id,
 		 salary, commission_pct, manager_id, department_id)
 		values
-		(employees_seq.nextval, #{firstName}, #{lastName}, #{email}, #{phoneNumber}, #{hireDate},
+		(employees_seq.nextval, #{encryptedPassword}, #{firstName}, #{lastName}, #{email}, #{phoneNumber}, #{hireDate},
 		 #{job.id}, #{salary}, #{commissionPct}, #{manager.id}, #{department.id})
 	</insert>
 	
@@ -132,6 +134,7 @@
 			A.phone_number			as phoneNumber,
 			A.hire_date				as hireDate,
 			A.salary,
+			A.encrypted_password    as encryptedPassword,
 			A.job_id				as "job.id",
 			B.job_title				as "job.title",
 			A.commission_pct		as commissionPct,
@@ -147,6 +150,59 @@
 			  and A.job_id = B.job_id
 			  and A.manager_id = C.employee_id(+)
 			  and A.employee_id = #{value}
+		order by
+			A.employee_id asc
+	</select>
+	
+	<select id="getEmployeeByEmail" parameterType="String" resultType="kr.co.jhta.vo.Employee">
+		select 
+			A.employee_id 			as id,
+			A.first_name			as firstName,
+			A.last_name				as lastName,
+			A.email,
+			A.phone_number			as phoneNumber,
+			A.hire_date				as hireDate,
+			A.salary,
+			A.encrypted_password    as encryptedPassword,
+			A.job_id				as "job.id",
+			B.job_title				as "job.title",
+			A.commission_pct		as commissionPct,
+			A.manager_id			as "manager.id",
+			C.first_name			as "manager.firstName",
+			C.last_name			    as "manager.lastName",
+			A.department_id			as "department.id",
+			D.department_name		as "department.name"			
+		from
+			employees A, jobs B, employees C, departments D
+		where 
+			  A.department_id = D.department_id(+)
+			  and A.job_id = B.job_id
+			  and A.manager_id = C.employee_id(+)
+			  and A.email = #{value}
+	</select>
+	
+	
+	<select id="getAllEmployees" resultType="kr.co.jhta.vo.Employee">
+		select 
+			A.employee_id 			as id,
+			A.first_name			as firstName,
+			A.last_name				as lastName,
+			A.email,
+			A.phone_number			as phoneNumber,
+			A.hire_date				as hireDate,
+			A.salary,
+			A.job_id				as "job.id",
+			A.commission_pct		as commissionPct,
+			A.manager_id			as "manager.id",
+			B.first_name			as "manager.firstName",
+			B.last_name			    as "manager.lastName",
+			A.department_id			as "department.id",
+			C.department_name		as "department.name"			
+		from
+			employees A, employees B, departments C
+		where 
+			  A.department_id = C.department_id(+)
+			  and A.manager_id = B.employee_id(+)
 		order by
 			A.employee_id asc
 	</select>

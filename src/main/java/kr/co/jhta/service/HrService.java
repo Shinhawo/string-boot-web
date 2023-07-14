@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,6 +53,9 @@ public class HrService {
 	
 	@Autowired
 	private EmployeeFileDao employeeFileDao;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	public List<Department> getAllDepartments() {
 		return departmentDao.getDepartments();
@@ -103,6 +107,10 @@ public class HrService {
 		// jobId, departmentId, manageId를 제외한 다른 프로퍼티값이 전부 복사됨
 		BeanUtils.copyProperties(form, employee);
 		
+		// 비밀번호를 암호화해서 저장시키기
+		String encryptedPassword = passwordEncoder.encode(form.getPassword());
+		employee.setEncryptedPassword(encryptedPassword);
+		
 		Job job = new Job(form.getJobId());
 		employee.setJob(job);
 		
@@ -145,6 +153,10 @@ public class HrService {
 		result.setEmployees(employees);
 		
 		return result;
+	}
+	
+	public List<Employee> getAllEmployees() {
+		return employeeDao.getAllEmployees();
 	}
 	
 	/**
@@ -238,4 +250,10 @@ public class HrService {
 		
 		workbook.close();
 	}
+	
+	
+	public EmployeeFile getEmployeeFile(int fileId) {
+		return employeeFileDao.getEmployeeFileById(fileId);
+	}
+
 }

@@ -11,6 +11,7 @@ logging:
 #    '[org.springframework.web]' : trace
 # mybatis 실행시 SQL 및 SQL 실행결과가 로그로 출력됨
     '[kr.co.jhta.mapper]' : trace
+    '[org.springframework.security]' : trace
 
 # prefix 주소의 앞부분
 # suffix 주소의 마지막 부분

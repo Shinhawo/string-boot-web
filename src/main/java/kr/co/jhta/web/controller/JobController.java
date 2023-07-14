@@ -3,6 +3,7 @@ package kr.co.jhta.web.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import kr.co.jhta.vo.Job;
 import kr.co.jhta.web.form.AddJobForm;
 import lombok.extern.slf4j.Slf4j;
 
+@PreAuthorize("isAuthenticated()")
 @Controller
 @RequestMapping("/job")
 @Slf4j
@@ -26,6 +28,9 @@ public class JobController {
 	
 	// 전체 직종목록화면 요청과 매핑되는 요청핸들러 메서드
 	@GetMapping("/list")
+	// 밑의 어노테이션을 주석처리하면 http://localhost/emp/loginform?error=denied
+	// 밑의 어노테이션을 주석처리하지않으면 http://localhost/emp/loginform?error=forbidden
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String getAllJobs(Model model){
 		
 		List<Job> jobList = hrService.getAllJobs();

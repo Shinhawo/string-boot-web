@@ -24,5 +24,6 @@ public class AddEmployeeForm {
 	private Double commissionPct;
 	private Integer managerId;
 	private Integer departmentId;
+	private String password;
 	
 }

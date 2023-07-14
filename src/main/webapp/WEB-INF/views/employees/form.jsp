@@ -33,11 +33,15 @@
                   </div>
                   <div class="row mb-3">
                      <label class="col-sm-1 col-form-label text-end">이메일</label>
-                     <div class="col-5 mb-3">
+                     <div class="col-3 mb-3">
                         <input type="text" class="form-control" name="email" />
                      </div>
+                     <label class="col-sm-1 col-form-label text-end">비밀번호</label>
+                     <div class="col-3 mb-3">
+                        <input type="password" class="form-control" name="password" />
+                     </div>
                      <label class="col-sm-1 col-form-label text-end">연락처</label>
-                     <div class="col-5 mb-3">
+                     <div class="col-3 mb-3">
                         <input type="text" class="form-control" name="phoneNumber" />
                      </div>
                   </div>
